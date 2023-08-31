@@ -3,11 +3,11 @@ import { layouts } from '../lib/layouts.mjs'
 globalThis.layouts = layouts
 
 let IMAGE_ROOT
-if (window.location.href.includes('127.0.0.1')) {
-  IMAGE_ROOT = 'textures/'
-} else {
+// if (window.location.href.includes('127.0.0.1')) {
+//   IMAGE_ROOT = 'textures/'
+// } else {
   IMAGE_ROOT = 'https://raw.githubusercontent.com/PrismarineJS/minecraft-assets/master/data/1.16.4/'
-}
+// }
 
 function patchPath (path) {
   if (IMAGE_ROOT.includes('.com')) { path = path.replace('block/', 'blocks/'); path = path.replace('item/', 'items/') }

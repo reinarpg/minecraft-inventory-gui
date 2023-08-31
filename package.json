@@ -29,12 +29,16 @@
   "homepage": "https://github.com/PrismarineJS/minecraft-inventory-gui#readme",
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "standard": "^16.0.4"
+    "standard": "^16.0.4",
+    "mineflayer": "^4.13.0"
   },
   "standard": {
     "parser": "babel-eslint",
     "ignore": [
       "web/bedrock/*"
     ]
+  },
+  "dependencies": {
+    "valtio": "^1.11.2"
   }
 }

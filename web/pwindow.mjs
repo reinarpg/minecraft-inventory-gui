@@ -1,10 +1,11 @@
 // const mcData = require('minecraft-data')('1.16')
 
-class PWindowManager {
+class InventoryManager {
   mouseDown = false
-  constructor (win, inv) {
+  constructor (win, inv, /** @type {import('mineflayer').Bot|undefined} */bot) {
     this.win = win
     this.inv = inv
+    this.bot = bot
     this.map = win.getWindowMap()
     this.renderItems()
 
@@ -21,6 +22,11 @@ class PWindowManager {
     })
   }
 
+  setSlots (items) {
+    this.inv.slots = items
+    this.renderItems()
+    this.win.needsUpdate = true
+  }
   setSlot (inventoryIndex, item) {
     this.inv.slots[inventoryIndex] = item
     // console.log('set', inventoryIndex, item)
@@ -39,7 +45,7 @@ class PWindowManager {
 
   // Helper for the max amount of items that can be filled in this slot, TODO: fill in with mcData
   getMaxStackSize (item) {
-    return 64// mcData.items[item.type].stackSize
+    return mcData.items[item.type].stackSize
   }
 
   // Called after the user has held down the mouse and has now released it
@@ -47,13 +53,21 @@ class PWindowManager {
     this.mouseDown = false
     this.mouseDownSlots = null
     this.mouseDownFloat = null
-    if (this.win.floatingItem?.count === 0) delete this.win.floatingItem
+    const { reactive } = this.win
+    if (reactive.floatingItem?.count === 0) {
+      reactive.floatingItem = undefined
+    }
   }
 
   onLeftClick (inventoryIndex, item) {
-    const floating = this.win.floatingItem
+    const { reactive } = this.win
+    const floating = reactive.floatingItem
+
+    // Send to server!
+    this.bot?.clickWindow(inventoryIndex, 0, 0)
+
     if (floating) {
-      console.log('have a floating itm')
+      console.log('had a floating item')
       if (item) {
         if (floating.type === item.type) {
           // add to existing slot
@@ -61,23 +75,25 @@ class PWindowManager {
           const consumable = Math.min(floating.count, free)
           floating.count -= consumable
           item.count += consumable
-          if (floating.count <= 0) delete this.win.floatingItem
+          if (floating.count <= 0) {
+            reactive.floatingItem = undefined
+          }
           this.win.needsUpdate = true
         } else {
           // swap
           const old = this.inv.slots[inventoryIndex]
-          this.setSlot(inventoryIndex, this.win.floatingItem)
-          this.win.floatingItem = old
+          this.setSlot(inventoryIndex, reactive.floatingItem)
+          reactive.floatingItem = old
           this.win.needsUpdate = true
         }
       } else {
         // slot is empty, set floating item to slot
-        this.setSlot(inventoryIndex, this.win.floatingItem)
-        this.win.floatingItem = null
+        this.setSlot(inventoryIndex, reactive.floatingItem)
+        reactive.floatingItem = null
         this.win.needsUpdate = true
       }
     } else { // pickup item
-      this.win.floatingItem = item
+      reactive.floatingItem = item
       this.setSlot(inventoryIndex, null)
     }
   }
@@ -239,11 +255,24 @@ class PWindowManager {
 }
 
 class Item {
-  constructor (type, count) {
+  constructor (type, count, isBlock) {
     this.type = type
     this.count = count
     this.displayName = type
     this.stackSize = 64
+    if(isBlock) {
+      this.blockData = {
+        left: {
+          type
+        },
+        right: {
+          type
+        },
+        top: {
+          type
+        }
+      }
+    }
   }
 
   clone () {
@@ -253,11 +282,11 @@ class Item {
 
 window.Item = Item
 
-class PWindow {
+class InventoryDataProvider {
   slots = [
     new Item(2, 22),
     new Item(3, 18),
-    new Item(4, 16),
+    new Item(4, 16, true),
     new Item(5, 15)
   ]
 
@@ -277,11 +306,12 @@ class PWindow {
   }
 }
 
-const pwindow = new PWindow()
+export default (inventory, /** @type {import('mineflayer').Bot|undefined} */bot) => {
+  const provider = new InventoryDataProvider()
 
-setTimeout(() => {
-  window.manager = new PWindowManager(window.inventory, pwindow)
-}, 500)
+  return new InventoryManager(inventory, provider, bot)
+}
+
 
 // function createWindowView(pwindow) {
 //   let windows = {}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Minecraft Cube</title>
+    <style>
+        html {
+            background: black;
+        }
+    </style>
+    <script type="module">
+        import * as THREE from 'https://cdn.skypack.dev/three@0.133.1/build/three.module.js'
+
+        const scene = new THREE.Scene()
+        const camera = new THREE.OrthographicCamera(
+            window.innerWidth / -2, // Left
+            window.innerWidth / 2,  // Right
+            window.innerHeight / 2, // Top
+            window.innerHeight / -2, // Bottom
+            -100, // Near
+            100  // Far
+        )
+        // const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+        const renderer = new THREE.WebGLRenderer()
+        renderer.setSize(window.innerWidth, window.innerHeight)
+        document.body.appendChild(renderer.domElement)
+
+        const blockSize = 50
+        const blockGeometry = new THREE.BoxGeometry(blockSize, blockSize, blockSize)
+
+        // Load the block side image as a base64 data URL
+        new THREE.TextureLoader().load('http://localhost:8080/textures/1.8.8.png', (atlasTexture) => {
+            // Apply a pixelated filter to the texture
+            atlasTexture.magFilter = THREE.NearestFilter
+            atlasTexture.minFilter = THREE.NearestFilter
+
+            // const startU = 0.5
+            // const startV = 0
+            const widthU = 0.03125
+            const heightV = 0.03125
+            atlasTexture.flipY = false
+            // atlasTexture.needsUpdate = true
+            const dimSidesMap = [
+                // 0.8,
+                0.7,
+                null,
+                // 0.7,
+                0.5
+            ]
+            const addCube = (x, y) => {
+                const materials = []
+                for (let i = 0; i < 3; i++) {
+                    let t = atlasTexture.clone()
+                    t.offset.x = 0
+                    t.offset.y = 0
+                    t.repeat.set(widthU, widthU)
+                    t.needsUpdate = true
+                    const material = new THREE.MeshBasicMaterial({
+                        map: t,
+                        // Calculate UV coordinates based on the atlas region
+                    })
+                    material.color = dimSidesMap[i] ? new THREE.Color(dimSidesMap[i], dimSidesMap[i], dimSidesMap[i]) : undefined
+                    // material.needsUpdate = true
+                    materials.push(material)
+                }
+
+                const cube = new THREE.Mesh(blockGeometry, [new THREE.MeshBasicMaterial(), ...materials.slice(0, 2), new THREE.MeshBasicMaterial(), materials[2]])
+
+                // Set the initial rotation to match the Minecraft slot UI
+                cube.rotation.x = Math.PI / 6
+                cube.rotation.y = Math.PI / 4
+
+                // set position
+                cube.position.x = x * blockSize * 1.5
+                cube.position.y = y * blockSize * 1.5
+
+                scene.add(cube)
+            }
+
+            console.time('render')
+            for (let x = 0; x < 10; x++) {
+                for (let y = 0; y < 10; y++) {
+                    addCube(x, y)
+                }
+            }
+
+            camera.position.z = 10
+
+            const animate = () => {
+                // requestAnimationFrame(animate)
+
+                renderer.render(scene, camera)
+            }
+
+            const resetScene = () => {
+                scene.children.forEach((child) => {
+                    if (child.type === 'Mesh') {
+                        scene.remove(child)
+                    }
+                })
+            }
+
+            animate()
+            console.timeEnd('render')
+        }) // Replace with your base64 image data
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>
