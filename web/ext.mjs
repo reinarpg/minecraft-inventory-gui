@@ -8,7 +8,8 @@ export const showInventory = (type = 'PlayerWin', getImage, itemsReactive, bot) 
     const canvas = document.createElement('canvas')
     document.body.appendChild(canvas)
     const canvasManager = new CanvasEventManager(canvas)
-    const inventory = new InventoryWindows.PlayerWin(canvasManager, {
+    const Class = InventoryWindows[type];
+    const inventory = new Class(canvasManager, {
         getImage,
         getImageIcon(item) {
             return item

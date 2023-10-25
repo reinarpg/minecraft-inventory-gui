@@ -1,10 +1,6 @@
+//@ts-check
 import { getImage } from '../web/util.mjs'
-import { CanvasEventManager } from '../lib/CanvasManager.mjs'
-import * as InventoryWindows from '../lib/inventories.mjs'
-import pwindow from './pwindow.mjs'
-
-window.canvas = document.getElementById('demo')
-const canvasManager = new CanvasEventManager(window.canvas)
+import { showInventory } from './ext.mjs'
 
 const testItems = [
   'item/brick',
@@ -16,32 +12,33 @@ const testItems = [
   'item/compass_00'
 ]
 
-const getImageIcon = (item) => {
-  return { path: testItems[item.type] }
-}
-
-let inventory = new InventoryWindows.PlayerWin(canvasManager, {
-  getImage, getImageIcon
-})
-
-canvasManager.setScale(3)
-
-
-window.manager = pwindow(inventory)
-
-console.log('Rendering')
-canvasManager.startRendering()
-
 function randomBetween (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
+
+const getImage2 = ({ path }) => {
+  return getImage({ path })
+}
+
+let windowName = undefined
+let { canvas, pwindow, inventory, canvasManager, destroy } = showInventory(undefined, getImage, {}, undefined)
+
+const init = () => {
+  destroy();
+  ({ canvas, pwindow, inventory, canvasManager, destroy } = showInventory(windowName, getImage, {}, undefined))
+  globalThis.canvas = canvas
+  globalThis.pwindow = pwindow
+
+  pwindow.setSlots(testItems.map(testItem => ({ path: testItem, count: 2, displayName: testItem.split('/').pop() })))
+}
+init()
 
 function renderTesting () {
   const windowMap = inventory.getWindowMap()
 
   for (const key in windowMap) {
     const size = windowMap[key][1] ? Math.abs(windowMap[key][1] - windowMap[key][0]) + 1 : 1
-    const getRandomItem = () => new window.Item(randomBetween(0, testItems.length - 1), randomBetween(1, 64))
+    const getRandomItem = () => new globalThis.Item(randomBetween(0, testItems.length - 1), randomBetween(1, 64))
     const arr = new Array(size).fill(0).map(getRandomItem)
     inventory[key] = arr
   }
@@ -57,7 +54,7 @@ function clearWindow () {
   }
 }
 
-window.toggleTesting = () => {
+globalThis.toggleTesting = () => {
   globalThis.TESTING = !globalThis.TESTING
   if (globalThis.TESTING) {
     renderTesting()
@@ -66,23 +63,18 @@ window.toggleTesting = () => {
   }
 }
 
-window.toggleAnimations = () => {
+globalThis.toggleAnimations = () => {
   globalThis.debuggingInventory = !globalThis.debuggingInventory
-  window.updateWin()
+  globalThis.updateWin()
 }
 
-window.setScale = (scale) => {
+globalThis.setScale = (scale) => {
   canvasManager.setScale(scale)
 }
 
-window.updateWin = () => {
-  canvasManager.reset()
+globalThis.updateWin = () => {
+  //@ts-ignore
   const selWindow = document.getElementById('active-win').value
-  inventory = new InventoryWindows[selWindow](canvasManager, { getImage, getImageIcon })
-  canvasManager.slideInUp(inventory)
-  inventory.needsUpdate = true
-
-  if (globalThis.TESTING) {
-    renderTesting()
-  }
+  windowName = selWindow
+  init()
 }

@@ -254,7 +254,7 @@ class InventoryManager {
   }
 }
 
-class Item {
+export class Item {
   constructor (type, count, isBlock) {
     this.type = type
     this.count = count
@@ -279,8 +279,6 @@ class Item {
     return new Item(this.type, this.count)
   }
 }
-
-window.Item = Item
 
 class InventoryDataProvider {
   slots = [

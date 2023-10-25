@@ -15,7 +15,7 @@ function patchPath (path) {
   return path
 }
 
-window.loadedImageBlobs = {}
+const loadedImageBlobs = {}
 
 const images = [
   'item/brick',
@@ -47,7 +47,7 @@ function loadAllImagesWeb () {
     const img = new Image() // Create new img element
     img.src = patchPath(IMAGE_ROOT + path) + '.png' // Set source path
     img.onload = function () {
-      window.loadedImageBlobs[path] = this
+      loadedImageBlobs[path] = img
     }
   }
 }
@@ -60,7 +60,7 @@ function loadRuntimeImage (atPath) {
   // img.onload = function () {
   //   loadedImageBlobs[path] = this
   // }
-  window.loadedImageBlobs[atPath] = img
+  loadedImageBlobs[atPath] = img
 }
 
 export function getImage (options) {
@@ -71,11 +71,11 @@ export function getImage (options) {
     loadRuntimeImage(path)
   }
 
-  if (!window.loadedImageBlobs[path]) {
+  if (!loadedImageBlobs[path]) {
     loadRuntimeImage(path)
   }
 
-  return window.loadedImageBlobs[path]
+  return loadedImageBlobs[path]
 }
 
 loadAllImagesWeb()

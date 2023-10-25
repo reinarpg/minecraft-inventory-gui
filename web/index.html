@@ -12,7 +12,7 @@
   Window
   <select name="" id="active-win" onchange="updateWin()">
     <option value="PlayerWin">Survival inv</option>
-    <option value="CreativeWin">Creative win</option>
+    <!-- <option value="CreativeWin">Creative win</option> -->
     <option value="BrewingWin">Brewing win</option>
     <option value="AnvilWin">Anvil win</option>
     <option value="EnchantingWin">Enchant win</option>
@@ -41,10 +41,6 @@
 
   <hr />
 
-  <div>
-    <canvas id="demo" width="1000" height="1000"></canvas>
-  </div>
-
   <script type="importmap">
     {
       "imports": {
@@ -53,6 +49,18 @@
     }
   </script>
   <script type="module" src="app.mjs"></script>
+  <script>
+    const qs = new URLSearchParams(window.location.search)
+    function updateWinExtra() {
+      updateWin()
+      qs.set('win', document.getElementById('active-win').value)
+      window.history.replaceState({}, '', `${window.location.pathname}?${qs}`)
+    }
+    if (qs.has('win')){
+      document.getElementById('active-win').value = qs.get('win')
+      updateWin()
+    }
+  </script>
 </body>
 
 </html>
