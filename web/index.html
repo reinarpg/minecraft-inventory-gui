@@ -6,6 +6,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inventory Demo</title>
+  <style>
+    @font-face {
+      font-family: minecraft;
+      src: url(./minecraftia.woff);
+    }
+  </style>
 </head>
 
 <body>
@@ -56,7 +62,7 @@
       qs.set('win', document.getElementById('active-win').value)
       window.history.replaceState({}, '', `${window.location.pathname}?${qs}`)
     }
-    if (qs.has('win')){
+    if (qs.has('win')) {
       document.getElementById('active-win').value = qs.get('win')
       updateWin()
     }

@@ -11,6 +11,7 @@
     "test": "npm run lint",
     "lint": "standard --env browser",
     "fix": "standard --env browser --fix",
+    "dev": "serve",
     "prepublishOnly": "cp docs/README.md README.md"
   },
   "repository": {
