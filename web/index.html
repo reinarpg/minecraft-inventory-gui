@@ -34,6 +34,7 @@
 
   <input type="checkbox" onchange="toggleTesting()"> Randomize items
   <input type="checkbox" onchange="toggleAnimations()"> Test animation loop
+  <input type="checkbox" onchange="toggleTouch()"> Touch
 
   &bull; Scale
   <select name="scale" id="scale" onchange="setScale(this.value)">
@@ -55,7 +56,7 @@
     }
   </script>
   <script type="module" src="app.mjs"></script>
-  <script>
+  <script defer>
     const qs = new URLSearchParams(window.location.search)
     function updateWinExtra() {
       updateWin()
@@ -65,6 +66,12 @@
     if (qs.has('win')) {
       document.getElementById('active-win').value = qs.get('win')
       updateWin()
+    }
+    if (qs.has('scale')) {
+      setTimeout(() => {
+        document.getElementById('scale').value = qs.get('scale')
+        document.getElementById('scale').dispatchEvent(new Event('change'))
+      }, 150)
     }
   </script>
 </body>

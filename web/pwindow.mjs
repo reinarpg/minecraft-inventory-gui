@@ -2,6 +2,11 @@
 
 class InventoryManager {
   mouseDown = false
+  touch = false
+  onJeiClick = (item, index, mouse) => {
+    console.log('jei click', item, index, mouse)
+  }
+
   constructor (win, inv, /** @type {import('mineflayer').Bot|undefined} */bot) {
     this.win = win
     this.inv = inv
@@ -13,6 +18,17 @@ class InventoryManager {
       // console.log('itemEvent', id, type, pos, data)
       if (type === 'release') {
         this.onRelease()
+      } else if (data[0] === 'jeiSliceSlots') {
+        const [containing, index] = data
+        const item = this.win.jeiSliceSlots[index]
+        if (type === 'click' || type === 'rightclick') {
+          if (this.win.floatingItem) {
+            // todo remove item
+          }
+          this.onJeiClick(item, index, type === 'rightclick' ? 1 : 0)
+        } else {
+          this.onInventoryEvent(type, containing, index, -1, item)
+        }
       } else {
         const [containing, index] = data
         const slotIndex = this.map[containing][0] + index
@@ -64,6 +80,7 @@ class InventoryManager {
     const floating = reactive.floatingItem
 
     // Send to server!
+    console.log('click', inventoryIndex)
     this.bot?.clickWindow(inventoryIndex, 0, 0)
 
     if (floating) {
@@ -99,6 +116,8 @@ class InventoryManager {
   }
 
   onRightClick (inventoryIndex, slot) {
+    this.bot?.clickWindow(inventoryIndex, 1, 0)
+
     const floating = this.win.floatingItem
     if (floating) {
       if (slot) {

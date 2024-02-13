@@ -11,6 +11,7 @@ const testItems = [
   'item/apple',
   'item/compass_00'
 ]
+const jeiTestItems = Array.from({ length: 1000 }, () => testItems[Math.floor(Math.random() * testItems.length)])
 
 function randomBetween (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min)
@@ -29,7 +30,9 @@ const init = () => {
   globalThis.canvas = canvas
   globalThis.pwindow = pwindow
 
-  pwindow.setSlots(testItems.map(testItem => ({ path: testItem, count: 2, displayName: testItem.split('/').pop() })))
+  const getItem = testItem => ({ path: testItem, count: 2, displayName: testItem.split('/').pop() });
+  pwindow.win.jeiSlots = jeiTestItems.map(getItem)
+  pwindow.setSlots(testItems.map(getItem))
 }
 init()
 
