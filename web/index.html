@@ -56,23 +56,23 @@
     }
   </script>
   <script type="module" src="app.mjs"></script>
-  <script defer>
-    const qs = new URLSearchParams(window.location.search)
-    function updateWinExtra() {
-      updateWin()
-      qs.set('win', document.getElementById('active-win').value)
-      window.history.replaceState({}, '', `${window.location.pathname}?${qs}`)
-    }
-    if (qs.has('win')) {
-      document.getElementById('active-win').value = qs.get('win')
-      updateWin()
-    }
-    if (qs.has('scale')) {
-      setTimeout(() => {
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const qs = new URLSearchParams(window.location.search)
+      function updateWinExtra() {
+        updateWin()
+        qs.set('win', document.getElementById('active-win').value)
+        window.history.replaceState({}, '', `${window.location.pathname}?${qs}`)
+      }
+      if (qs.has('win')) {
+        document.getElementById('active-win').value = qs.get('win')
+        updateWin()
+      }
+      if (qs.has('scale')) {
         document.getElementById('scale').value = qs.get('scale')
         document.getElementById('scale').dispatchEvent(new Event('change'))
-      }, 150)
-    }
+      }
+    })
   </script>
 </body>
 

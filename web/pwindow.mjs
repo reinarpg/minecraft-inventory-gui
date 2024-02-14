@@ -116,6 +116,7 @@ class InventoryManager {
   }
 
   onRightClick (inventoryIndex, slot) {
+    const { reactive } = this.win
     this.bot?.clickWindow(inventoryIndex, 1, 0)
 
     const floating = this.win.floatingItem
@@ -135,10 +136,13 @@ class InventoryManager {
         this.setSlot(inventoryIndex, slot)
       }
     } else if (slot) {
-      this.win.floatingItem = slot.clone()
       const split = Math.ceil(slot.count / 2)
+      // slot.count -= split
+      // this.win.floatingItem.count = split
+      reactive.floatingItem = {...slot}
       slot.count -= split
-      this.win.floatingItem.count = split
+      reactive.floatingItem.count = split
+      this.setSlot(inventoryIndex, slot.count ? slot : null)
     }
     if (slot?.count === 0) delete this.inv.slots[inventoryIndex]
     if (floating?.count === 0) delete this.win.floatingItem
