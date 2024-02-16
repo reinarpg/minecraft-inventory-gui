@@ -15,6 +15,7 @@ export {
   HopperWin,
   HorseWin,
   BeaconWin,
+  Generic95Win,
 
   VillagerWin,
   HotbarWin
