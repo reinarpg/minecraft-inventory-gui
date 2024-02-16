@@ -12,6 +12,9 @@ export {
   ChestWin,
   LargeChestWin,
   FurnaceWin,
+  HopperWin,
+  HorseWin,
+  BeaconWin,
 
   VillagerWin,
   HotbarWin
