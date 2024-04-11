@@ -28,10 +28,17 @@ const init = () => {
   destroy();
   ({ canvas, pwindow, inventory, canvasManager, destroy } = showInventory(windowName, getImage, {}, undefined))
   globalThis.canvas = canvas
+  globalThis.canvasManager = canvasManager
+  // canvasManager.minimizedWindow = true
+  // inventory.supportsOffhand = true
+  // canvasManager.scale = 2
+  // canvasManager.windowHeight = 50
+  // canvasManager.windowWidth = 420
   globalThis.pwindow = pwindow
+  globalThis.inventory = inventory
 
   const getItem = testItem => ({ path: testItem, count: 2, displayName: testItem.split('/').pop() });
-  pwindow.win.jeiSlots = jeiTestItems.map(getItem)
+  // pwindow.win.jeiSlots = jeiTestItems.map(getItem)
   pwindow.setSlots(testItems.map(getItem))
 }
 init()
