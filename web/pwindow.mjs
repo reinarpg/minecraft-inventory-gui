@@ -13,6 +13,7 @@ class InventoryManager {
     this.bot = bot
     this.map = win.getWindowMap()
     this.renderItems()
+    this.disablePicking = false
 
     win.on('itemEvent', (id, type, pos, data) => {
       // console.log('itemEvent', id, type, pos, data)
@@ -80,8 +81,10 @@ class InventoryManager {
     const floating = reactive.floatingItem
 
     // Send to server!
-    console.log('click', inventoryIndex)
+    console.log('slot click', inventoryIndex)
     this.bot?.clickWindow(inventoryIndex, 0, 0)
+
+    if (this.disablePicking) return
 
     if (floating) {
       console.log('had a floating item')
@@ -118,6 +121,8 @@ class InventoryManager {
     const { reactive } = this.win
     const initialCount = slot.count
     this.bot?.clickWindow(inventoryIndex, 1, 0)
+
+    if (this.disablePicking) return
 
     const floating = reactive.floatingItem
     if (floating) {
