@@ -108,7 +108,7 @@ class InventoryManager {
         reactive.floatingItem = null
         this.win.needsUpdate = true
       }
-    } else { // pickup item
+    } else if (item) { // pickup item
       reactive.floatingItem = {...item}
       this.setSlot(inventoryIndex, null)
     }
