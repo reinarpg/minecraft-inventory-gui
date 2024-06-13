@@ -119,7 +119,6 @@ class InventoryManager {
 
   onRightClick (inventoryIndex, slot) {
     const { reactive } = this.win
-    const initialCount = slot.count
     this.bot?.clickWindow(inventoryIndex, 1, 0)
 
     if (this.disablePicking) return
@@ -138,6 +137,7 @@ class InventoryManager {
         floating.count--
       }
     } else if (slot) {
+      const initialCount = slot.count
       reactive.floatingItem = {...slot}
       reactive.floatingItem.count = initialCount - slot.count
       this.setSlot(inventoryIndex, slot.count ? slot : null)
