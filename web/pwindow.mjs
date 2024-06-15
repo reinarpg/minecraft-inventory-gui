@@ -119,6 +119,7 @@ class InventoryManager {
 
   onRightClick (inventoryIndex, slot) {
     const { reactive } = this.win
+    const initialCount = slot?.count
     this.bot?.clickWindow(inventoryIndex, 1, 0)
 
     if (this.disablePicking) return
@@ -137,7 +138,6 @@ class InventoryManager {
         floating.count--
       }
     } else if (slot) {
-      const initialCount = slot.count
       reactive.floatingItem = {...slot}
       reactive.floatingItem.count = initialCount - slot.count
       this.setSlot(inventoryIndex, slot.count ? slot : null)
@@ -173,30 +173,33 @@ class InventoryManager {
    */
   onShiftClick (slotType, inventoryIndex, item) {
     if (!item) return
+    bot?.clickWindow(inventoryIndex, 0, 1)
+    // ALL BELOW COMMENTED as the server can handle the rest!
+
     // Shift click move item, TODO: handle edge cases:
     // if (type is armor) move to armor slot;
     // if (type is shield) move to shield slot;
     // else ...
 
-    const shift = (to) => {
-      const map = this.map[to]
-      // First, try to add to add the floating item to all the slots that match the floating item type
-      for (let i = map[0]; i < map[1] && item.count; i++) {
-        // const added = this.addToSlot(i, item, true)
-        // item.count -= added
-        if (item.count <= 0) delete this.inv.slots[inventoryIndex]
-      }
-      // Then if we still have remaining items, add to any empty slot
-      for (let i = map[0]; i < map[1] && item.count; i++) {
-        // const added = this.addToSlot(i, item, false)
-        // item.count -= added
-        if (item.count <= 0) delete this.inv.slots[inventoryIndex]
-      }
-    }
+    // const shift = (to) => {
+    //   const map = this.map[to]
+    //   // First, try to add to add the floating item to all the slots that match the floating item type
+    //   for (let i = map[0]; i < map[1] && item.count; i++) {
+    //     // const added = this.addToSlot(i, item, true)
+    //     // item.count -= added
+    //     if (item.count <= 0) delete this.inv.slots[inventoryIndex]
+    //   }
+    //   // Then if we still have remaining items, add to any empty slot
+    //   for (let i = map[0]; i < map[1] && item.count; i++) {
+    //     // const added = this.addToSlot(i, item, false)
+    //     // item.count -= added
+    //     if (item.count <= 0) delete this.inv.slots[inventoryIndex]
+    //   }
+    // }
 
-    if (slotType === 'hotbarItems') shift('inventoryItems')
-    if (slotType === 'inventoryItems') shift('hotbarItems')
-    this.renderItems()
+    // if (slotType === 'hotbarItems') shift('inventoryItems')
+    // if (slotType === 'inventoryItems') shift('hotbarItems')
+    // this.renderItems()
   }
 
   // Called whenever an inventory event occurs
