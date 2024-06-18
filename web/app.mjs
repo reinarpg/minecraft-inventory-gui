@@ -40,6 +40,22 @@ const init = () => {
   const getItem = testItem => ({ path: testItem, count: 2, displayName: testItem.split('/').pop() });
   // pwindow.win.jeiSlots = jeiTestItems.map(getItem)
   pwindow.setSlots(testItems.map(getItem))
+  canvasManager.children[0].callbacks.getItemRecipes = (item) => {
+    console.log('getItemRecipes', item)
+    return [
+      [
+        'CraftingTableGuide',
+        getItem(testItems[0]),
+        new Array(9).fill(0).map(() => getItem(testItems[randomBetween(0, testItems.length - 1)])),
+      ],
+      [
+        'CraftingTableGuide',
+        getItem(testItems[0]),
+        new Array(9).fill(0).map(() => getItem(testItems[randomBetween(0, testItems.length - 1)])),
+      ]
+    ]
+  }
+  canvasManager.children[0].activeMessage = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor'
 }
 init()
 

@@ -19,6 +19,7 @@ export const showInventory = (type = 'PlayerWin', getImage, itemsReactive, bot) 
     canvasManager.setScale(4)
 
     canvasManager.startRendering()
+    canvasManager.children[0].callbacks
 
     return {
         canvasManager,

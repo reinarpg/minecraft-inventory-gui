@@ -9,6 +9,8 @@ export {
   PlayerWin,
   DropDispenseWin,
   CraftingWin,
+  CraftingGuideWin,
+  GenericDescription,
   ChestWin,
   LargeChestWin,
   FurnaceWin,

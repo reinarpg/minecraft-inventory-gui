@@ -32,7 +32,7 @@ class InventoryManager {
         }
       } else {
         const [containing, index] = data
-        const slotIndex = this.map[containing][0] + index
+        const slotIndex = this.map[containing] ? this.map[containing][0] + index : -1
         const item = this.inv.slots[slotIndex]
         this.onInventoryEvent(type, containing, index, slotIndex, item)
       }
