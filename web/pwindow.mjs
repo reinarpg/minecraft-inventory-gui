@@ -173,7 +173,7 @@ class InventoryManager {
    */
   onShiftClick (slotType, inventoryIndex, item) {
     if (!item) return
-    bot?.clickWindow(inventoryIndex, 0, 1)
+    this.bot?.clickWindow(inventoryIndex, 0, 1)
     // ALL BELOW COMMENTED as the server can handle the rest!
 
     // Shift click move item, TODO: handle edge cases:
