@@ -38,7 +38,7 @@ const init = () => {
   globalThis.inventory = inventory
 
   const getItem = testItem => ({ path: testItem, count: 2, displayName: testItem.split('/').pop() });
-  // pwindow.win.jeiSlots = jeiTestItems.map(getItem)
+  pwindow.win.jeiSlots = jeiTestItems.map(getItem)
   pwindow.setSlots(testItems.map(getItem))
   canvasManager.children[0].callbacks.getItemRecipes = (item) => {
     console.log('getItemRecipes', item)
